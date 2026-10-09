@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Finder</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #dbeafe, #ede9fe);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            text-align: center;
+        }
+
+        h1 {
+            color: #4f46e5;
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        p {
+            color: #555;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 5px rgba(79, 70, 229, 0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #3730a3;
+        }
+
+        #result {
+            display: none;
+            margin-top: 22px;
+            padding: 20px;
+            background: #f0fdf4;
+            border: 1px solid #86efac;
+            border-radius: 12px;
+            text-align: left;
+            overflow-wrap: anywhere;
+        }
+
+        #result h2 {
+            color: #15803d;
+            font-size: 21px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        #result p {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        #message {
+            margin-top: 15px;
+            color: #dc2626;
+            overflow-wrap: anywhere;
+        }
+
+        /* Tablet */
+        @media (max-width: 768px) {
+            body {
+                padding: 18px;
+            }
+
+            .container {
+                max-width: 420px;
+                padding: 25px;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 480px) {
+            body {
+                padding: 14px;
+                align-items: center;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 100%;
+                padding: 22px 18px;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            p {
+                font-size: 14px;
+            }
+
+            input,
+            button {
+                font-size: 16px;
+                padding: 13px;
+            }
+
+            #result {
+                padding: 16px;
+            }
+
+            #result h2 {
+                font-size: 19px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🎓 Student Finder</h1>
+        <p>Enter student name to find details</p>
+
+        <input type="text" id="studentName" placeholder="Enter student name...">
+
+        <button onclick="findStudent()">Search Student</button>
+
+        <div id="result">
+            <h2>Student Found!</h2>
+            <p><strong>Student Name:</strong> <span id="name"></span></p>
+            <p><strong>Student ID:</strong> <span id="id"></span></p>
+            <p><strong>Class:</strong> <span id="className"></span></p>
+        </div>
+
+        <p id="message"></p>
+
+    </div>
+
+    <script>
+
+        const students = [
+    { name: "ANSARI FARZEEN NAZ MOHD IQBAL", id: "STU001", className: "FY-MCA" },
+    { name: "ANSARI MD AQEEL LAEEQE AHMED", id: "STU002", className: "FY-MCA" },
+    { name: "BADGUJAR ROSHAN SUNIL", id: "STU003", className: "FY-MCA" },
+    { name: "BANDHANE JANHAVI MADAN", id: "STU004", className: "FY-MCA" },
+    { name: "BARNWAL DISHA OMPRAKASH", id: "STU005", className: "FY-MCA" },
+    { name: "BELLE PRAJAKTA PARAMESHWAR", id: "STU006", className: "FY-MCA" },
+    { name: "BUTKAR RIYA VILAS", id: "STU007", className: "FY-MCA" },
+    { name: "CHAUDHARI PRERANA DEEPAK", id: "STU008", className: "FY-MCA" },
+    { name: "CHAUDHARI SUMIT PRABHAKAR", id: "STU009", className: "FY-MCA" },
+    { name: "CHAVAN SONALI SANJAY", id: "STU010", className: "FY-MCA" },
+    { name: "GAIKWAD SHUBHAM SUSHIL", id: "STU011", className: "FY-MCA" },
+    { name: "GARUD SAI VIJAY", id: "STU012", className: "FY-MCA" },
+    { name: "HARAM PRASAD PANDURANG", id: "STU013", className: "FY-MCA" },
+    { name: "ILAKE ABHIJEET GOVIND", id: "STU014", className: "FY-MCA" },
+    { name: "JADHAV SAPNA RAJ", id: "STU015", className: "FY-MCA" },
+    { name: "KAKADE NEHA AJIT", id: "STU016", className: "FY-MCA" },
+    { name: "KASBE KANCHAN YOGIRAJ", id: "STU017", className: "FY-MCA" },
+    { name: "KATALKAR TEJAL PRAVIN", id: "STU018", className: "FY-MCA" },
+    { name: "KATKAR SAYALI DATTATRAY", id: "STU019", className: "FY-MCA" },
+    { name: "KHILARE PARTH GANESH", id: "STU020", className: "FY-MCA" },
+    { name: "KOMAL KONDIRAM KODALKAR", id: "STU021", className: "FY-MCA" },
+    { name: "KUMAR SHIKHA SANTOSHI", id: "STU022", className: "FY-MCA" },
+    { name: "KUMBHAR MANISH PRAKASH", id: "STU023", className: "FY-MCA" },
+    { name: "KUMBHAR PRASAD SHANKAR", id: "STU024", className: "FY-MCA" },
+    { name: "MADAGUNAKI TUSHAR UMESH", id: "STU025", className: "FY-MCA" },
+    { name: "MAHAJAN ADITYA RAMKRUSHNA", id: "STU026", className: "FY-MCA" },
+    { name: "MALCHE ROSHANI DEVIDAS", id: "STU027", className: "FY-MCA" },
+    { name: "MANE KIRAN BABAN", id: "STU028", className: "FY-MCA" },
+    { name: "MASTIM SHARIFA MUJEEB", id: "STU029", className: "FY-MCA" },
+    { name: "NIKAM TANUSHREE PREMNATH", id: "STU030", className: "FY-MCA" },
+    { name: "PAL SHIVANI DEVENDRA", id: "STU031", className: "FY-MCA" },
+    { name: "PATIL RIYA MAHESH", id: "STU032", className: "FY-MCA" },
+    { name: "PATIL SHWET MANOHAR", id: "STU033", className: "FY-MCA" },
+    { name: "RAKESH NAGOJI PAWAR", id: "STU034", className: "FY-MCA" },
+    { name: "RAI SHREYA RADHESHYAM", id: "STU035", className: "FY-MCA" },
+    { name: "RAJBHAR YOGESH PROMOD", id: "STU036", className: "FY-MCA" },
+    { name: "RAY SONU MANIKANT", id: "STU037", className: "FY-MCA" },
+    { name: "REDDY VISHNUVARDHAN RAJVARDHAN", id: "STU038", className: "FY-MCA" },
+    { name: "SAWANT ABHIJEET SURESH", id: "STU039", className: "FY-MCA" },
+    { name: "SHAMSHAD AHMED ABUL KALAM", id: "STU040", className: "FY-MCA" },
+    { name: "SHELKE SHEETAL SUBHAS", id: "STU041", className: "FY-MCA" },
+    { name: "SHETTY GANESHA MAHENDRA", id: "STU042", className: "FY-MCA" },
+    { name: "SHEVATE SHRUTI SANJAY", id: "STU043", className: "FY-MCA" },
+    { name: "SHINDE APEKSHA SANJAY", id: "STU044", className: "FY-MCA" },
+    { name: "SHINDE JEET PRASHANT", id: "STU045", className: "FY-MCA" },
+    { name: "SHINDE OMKAR RAJU", id: "STU046", className: "FY-MCA" },
+    { name: "SHIRSATH DHAMMADEEP HARSHABODH", id: "STU047", className: "FY-MCA" },
+    { name: "SINGH SAKSHI GULAB", id: "STU048", className: "FY-MCA" },
+    { name: "SINGH SAMRUDDHI AWADHESH", id: "STU049", className: "FY-MCA" },
+    { name: "SINGH UTKARSH JITENDRA", id: "STU050", className: "FY-MCA" },
+    { name: "SURADKAR VIPUL SANJAY", id: "STU051", className: "FY-MCA" },
+    { name: "TIWARI SHREYA VIDPRAKASH", id: "STU052", className: "FY-MCA" },
+    { name: "TRIPATHI RISHABDEV MUKTINATH", id: "STU053", className: "FY-MCA" },
+    { name: "UTTAM SHRIVASTAVA BIPIN", id: "STU054", className: "FY-MCA" },
+    { name: "VAIDANDE SHRAVAN RAVINDRA", id: "STU055", className: "FY-MCA" },
+    { name: "VEMULA ABHISHEK RAMESH", id: "STU056", className: "FY-MCA" },
+    { name: "VERMA SAGAR SHYAMSUNDAR", id: "STU057", className: "FY-MCA" },
+    { name: "WAGH APURAVA GANESH", id: "STU058", className: "FY-MCA" },
+    { name: "YADAV AARTI RAMBHAVAN", id: "STU059", className: "FY-MCA" },
+    { name: "YADHAV SHIVANGI GORAKHNATH", id: "STU060", className: "FY-MCA" }
+];
+         
+function findStudent() {
+    const input = document
+        .getElementById("studentName")
+        .value
+        .trim()
+        .replace(/\s+/g, " ")
+        .toLowerCase();
+
+    const result = document.getElementById("result");
+    const message = document.getElementById("message");
+
+    result.style.display = "none";
+    message.textContent = "";
+
+    if (input === "") {
+        message.textContent = "Please enter a student name!";
+        return;
+    }
+
+    const student = students.find(function(s) {
+        const studentName = s.name
+            .trim()
+            .replace(/\s+/g, " ")
+            .toLowerCase();
+
+        return studentName === input;
+    });
+
+    if (student) {
+        document.getElementById("name").textContent = student.name;
+        document.getElementById("id").textContent = student.id;
+        document.getElementById("className").textContent =
+            student.className;
+
+        result.style.display = "block";
+    } else {
+        message.textContent = "Student not found! Please check the name.";
+    }
+}
+
+document.getElementById("studentName")
+    .addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            findStudent();
+        }
+    });
+
+
+        
+    </script>
+
+</body>
+
+</html>
